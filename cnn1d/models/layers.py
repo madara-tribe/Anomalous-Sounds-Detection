@@ -2,6 +2,8 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
+
+
 class GeM(nn.Module):
     '''
     Code modified from the 2d code in
@@ -24,4 +26,19 @@ class GeM(nn.Module):
                 '(' + 'p=' + '{:.4f}'.format(self.p.data.tolist()[0]) + \
                 ', ' + 'eps=' + str(self.eps) + ')'
 
+class MLP(nn.Module):
+    def __init__(self, in_dim, emb_dim, out_dim):
+        super(MLP, self).__init__()
+        
+        self.layers = nn.Sequential(
+            nn.Linear(in_dim, emb_dim),
+            nn.GELU(),
+            nn.Linear(emb_dim, out_dim),
+            nn.LayerNorm([out_dim]),
+            nn.Dropout(0.25),
+        )
+    def forward(self, x):
+        x = self.layers(x)
+        return x
+        
 

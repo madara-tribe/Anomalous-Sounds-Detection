@@ -17,11 +17,7 @@ class DataLoader(data.Dataset):
         self.bandpass_sr = config.bandpass_sr
         self.channel = config.CHANNEL
         self.valid = valid
-        self.cqt_ = CQTtransform(sr=8000, fmin=2000, fmax=4000, hop_length=124)
-        
-        self.normalize = A.Compose([
-            A.Normalize(mean=0.0, std=1.0, max_pixel_value=1.0),
-        ]) if transform else None
+        self.cqt_ = CQTtransform(sr=8000, fmin=2000, fmax=4000, hop_length=248)
         
         # Define paths based on training or validation mode
         if not self.valid:
@@ -67,8 +63,6 @@ class DataLoader(data.Dataset):
         path = self.paths[index]
         x, rs = sf.read(path)
         x = self.cqt_preprocess(x, rs, lf=self.low_cut, hf=self.high_cut, sr=self.bandpass_sr)
-        if self.normalize:
-            x = self.normalize(image=x)['image']
         #print(x.shape, x.min(), x.max())
         return x, self.labels[index]
 

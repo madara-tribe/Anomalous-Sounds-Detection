@@ -1,7 +1,7 @@
 from torch import nn
-from .layers import GeM
+from .layers import GeM, MLP
 import torch
-
+        
 class CNN1D(nn.Module):
     def __init__(self, in_channels):
         super().__init__()
@@ -46,20 +46,8 @@ class CNN1D(nn.Module):
                 nn.Dropout(0.25),
                 nn.SiLU()
         )
-        self.fc1 = nn.Sequential(
-            nn.Linear(131072, 64),
-            nn.GELU(),
-            nn.Linear(64, 256),
-            nn.LayerNorm([256]),
-            nn.Dropout(0.25),
-        )
-        self.fc2 = nn.Sequential(
-            nn.Linear(256, 64),
-            nn.GELU(),
-            nn.Linear(64, 256),
-            nn.LayerNorm([256]),
-            nn.Dropout(0.25),
-        )
+        self.fc1 = MLP(in_dim=131072, emb_dim=64, out_dim=256)
+        self.fc2 = MLP(in_dim=256, emb_dim=64, out_dim=256)
         self.fc3 = nn.Sequential(
             nn.Linear(256, 1),
         )
@@ -82,4 +70,5 @@ class CNN1D(nn.Module):
         x = self.fc2(x)
         x = self.fc3(x)
         return x
+
 
