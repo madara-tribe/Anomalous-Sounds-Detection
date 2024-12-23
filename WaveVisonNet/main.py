@@ -14,7 +14,7 @@ def main(config, weight_path, opt):
     train_dataset = AudioImageDataset(config, transform=train_transform, is_validation=None)
     val_dataset = AudioImageDataset(config, transform=val_transform, is_validation=True)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model = WaveVisonNet(outdim=config.num_class).to(device)
+    model = WaveVisonNet(output_dim=config.num_class).to(device)
     
     if weight_path is not None:
         model.load_state_dict(torch.load(weight_path))

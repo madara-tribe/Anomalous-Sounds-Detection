@@ -94,27 +94,3 @@ def plot_waveform_numpy(wave, sample_rate, title="Waveform"):
     plt.legend()
     plt.grid()
     plt.show()
-
-def get_spectrograms(sig, rate):
-    SAMPLE_RATE = 32000
-    SIGNAL_LENGTH = 5 # seconds
-    SPEC_SHAPE = (48, 128) # height x width
-    FMIN = 500
-    FMAX = 12500
-    hop_length = int(SIGNAL_LENGTH * SAMPLE_RATE / (SPEC_SHAPE[1] - 1))
-    mel_spec = librosa.feature.melspectrogram(y=sig, 
-                                              sr=rate, 
-                                              n_fft=1024, 
-                                              hop_length=hop_length, 
-                                              n_mels=SPEC_SHAPE[0], 
-                                              fmin=FMIN, 
-                                              fmax=FMAX)
-
-    mel_spec = librosa.power_to_db(mel_spec, ref=np.max) 
-    # Normalize
-    mel_spec -= mel_spec.min()
-    mel_spec /= mel_spec.max()
-    #print(mel_spec.shape)  
-    return mel_spec
-
-

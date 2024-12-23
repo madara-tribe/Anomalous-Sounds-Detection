@@ -1,14 +1,14 @@
 import torch.utils.data as data
 import numpy as np
 import glob
-from .signal_utils import load_audio_file, convert_waveform_to_image, wave_to_mel_features
+from .signal_utils import load_audio_file, apply_bandpass, convert_waveform_to_image, wave_to_mel_features
 
 
 class AudioImageDataset(data.Dataset):
     def __init__(self, config, transform=None, is_validation=None):
-        #self.low_cut = config.low_cut
-        #self.high_cut = config.high_cut
-        #self.bandpass_sr = config.bandpass_sr
+        self.low_cut = config.low_cut
+        self.high_cut = config.high_cut
+        self.bandpass_sr = config.bandpass_sr
         self.is_validation = is_validation
 
         self.transform = transform 
@@ -34,7 +34,7 @@ class AudioImageDataset(data.Dataset):
         Preprocess the signal data by applying the CQT transform
         and reshaping to (1, CHANNEL, TIME_STEP).
         """
-        #x = apply_bandpass(x, lf=self.low_cut, hf=self.high_cut, order=16, sr=self.bandpass_sr)
+        x = apply_bandpass(x, lf=self.low_cut, hf=self.high_cut, order=16, sr=self.bandpass_sr)
         x = wave_to_mel_features(x, sr=rate)
         x = np.resize(x, (100, 64*3))
         x = convert_waveform_to_image(x)
