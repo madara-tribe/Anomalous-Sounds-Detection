@@ -3,18 +3,18 @@ from pathlib import Path
 import os
 import torch
 from cfg import Cfg
-from models.model import TimmModel
-from utils.data_loder import DataLoader
+from models.model import WaveVisonNet
+from utils.data_loder import AudioImageDataset
 from utils.augmentations import transforms_
 from train import Trainer
 from predict import Predictor
 
 def main(config, weight_path, opt):
     train_transform, val_transform = transforms_(config)
-    train_dataset = DataLoader(config, transform=train_transform, valid=None)
-    val_dataset = DataLoader(config, transform=val_transform, valid=True)
+    train_dataset = AudioImageDataset(config, transform=train_transform, is_validation=None)
+    val_dataset = AudioImageDataset(config, transform=val_transform, is_validation=True)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model = TimmModel(outdim=config.num_class).to(device)
+    model = WaveVisonNet(outdim=config.num_class).to(device)
     
     if weight_path is not None:
         model.load_state_dict(torch.load(weight_path))

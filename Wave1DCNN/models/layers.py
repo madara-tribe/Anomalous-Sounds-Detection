@@ -26,9 +26,9 @@ class GeM(nn.Module):
                 '(' + 'p=' + '{:.4f}'.format(self.p.data.tolist()[0]) + \
                 ', ' + 'eps=' + str(self.eps) + ')'
 
-class MLP(nn.Module):
+class MultiLayerPerceptron(nn.Module):
     def __init__(self, in_dim, emb_dim, out_dim):
-        super(MLP, self).__init__()
+        super(MultiLayerPerceptron, self).__init__()
         
         self.layers = nn.Sequential(
             nn.Linear(in_dim, emb_dim),

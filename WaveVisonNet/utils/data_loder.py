@@ -1,19 +1,19 @@
 import torch.utils.data as data
 import numpy as np
 import glob
-from .signal_utils import file_load, wave2image, wav2mel_vector
+from .signal_utils import load_audio_file, convert_waveform_to_image, wave_to_mel_features
 
 
-class DataLoader(data.Dataset):
-    def __init__(self, config, transform=None, valid=None):
-        self.low_cut = config.low_cut
-        self.high_cut = config.high_cut
-        self.bandpass_sr = config.bandpass_sr
-        self.valid = valid
+class AudioImageDataset(data.Dataset):
+    def __init__(self, config, transform=None, is_validation=None):
+        #self.low_cut = config.low_cut
+        #self.high_cut = config.high_cut
+        #self.bandpass_sr = config.bandpass_sr
+        self.is_validation = is_validation
 
         self.transform = transform 
         # Define paths based on training or validation mode
-        if not self.valid:
+        if not self.is_validation:
             normal_paths = glob.glob(config.train_normal_path)
             anomaly_paths = glob.glob(config.train_anomaly_path)
         else:
@@ -35,19 +35,18 @@ class DataLoader(data.Dataset):
         and reshaping to (1, CHANNEL, TIME_STEP).
         """
         #x = apply_bandpass(x, lf=self.low_cut, hf=self.high_cut, order=16, sr=self.bandpass_sr)
-        x = wav2mel_vector(x, sr=rate)
-        x = mel_vector = np.resize(x, (100, 64*3))
-        x = wave2image(x)
+        x = wave_to_mel_features(x, sr=rate)
+        x = np.resize(x, (100, 64*3))
+        x = convert_waveform_to_image(x)
         return x
     
     def __getitem__(self, index):
         path = self.paths[index]
-        wave, rs = file_load(path)
+        wave, rs = load_audio_file(path)
         x = self.preprocess(wave, rs)
 #        x.save("img/{}.png".format(index))
         if self.transform is not None:
             x = self.transform(image=np.array(x))['image']
- #       print(x.shape, x.min(), x.max())
         return x, self.labels[index]
 
 

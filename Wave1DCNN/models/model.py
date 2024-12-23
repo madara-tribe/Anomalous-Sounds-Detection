@@ -1,38 +1,38 @@
 from torch import nn
-from .layers import GeM, MLP
-import torch
+from .layers import GeM
+from .layers import MultiLayerPerceptron as MLP
         
-class CNN1D(nn.Module):
+class OneDimensionalCNN(nn.Module):
     def __init__(self, in_channels):
         super().__init__()
-        self.cnn1 = nn.Sequential(
+        self.conv_block1 = nn.Sequential(
             nn.Conv1d(in_channels, 64, kernel_size=16),
             nn.BatchNorm1d(64),
             nn.SiLU(),
         )
-        self.cnn2 = nn.Sequential(
+        self.conv_block2 = nn.Sequential(
             nn.Conv1d(64, 64, kernel_size=8),
             GeM(kernel_size=8),
             nn.BatchNorm1d(64),
             nn.SiLU(),
         )
-        self.cnn3 = nn.Sequential(
+        self.conv_block3 = nn.Sequential(
             nn.Conv1d(64, 128, kernel_size=8),
             nn.BatchNorm1d(128),
             nn.SiLU(),
         )
-        self.cnn4 = nn.Sequential(
+        self.conv_block4 = nn.Sequential(
             nn.Conv1d(128, 128, kernel_size=4),
             GeM(kernel_size=6),
             nn.BatchNorm1d(128),
             nn.SiLU(),
         )
-        self.cnn5 = nn.Sequential(
+        self.conv_block5 = nn.Sequential(
             nn.Conv1d(128, 256, kernel_size=4),
             nn.BatchNorm1d(256),
             nn.SiLU(),
         )
-        self.cnn6 = nn.Sequential(
+        self.conv_block6 = nn.Sequential(
             nn.Conv1d(256, 256, kernel_size=4),
             GeM(kernel_size=4),
             nn.BatchNorm1d(256),
@@ -46,29 +46,27 @@ class CNN1D(nn.Module):
                 nn.Dropout(0.25),
                 nn.SiLU()
         )
-        self.fc1 = MLP(in_dim=131072, emb_dim=64, out_dim=256)
-        self.fc2 = MLP(in_dim=256, emb_dim=64, out_dim=256)
-        self.fc3 = nn.Sequential(
+        self.mlp_head1 = MLP(in_dim=131072, emb_dim=64, out_dim=256)
+        self.mlp_head2 = MLP(in_dim=256, emb_dim=64, out_dim=256)
+        self.mlp_head3 = nn.Sequential(
             nn.Linear(256, 1),
         )
 
-    def forward(self, x, pos=None):
-        #xs_ = x[:, 1, :].unsqueeze(1)
-        x = self.cnn1(x)
-        x = self.cnn2(x)
-        x = self.cnn3(x)
-        x = self.cnn4(x)
-        x = self.cnn5(x)
-        res = self.cnn6(x)
+    def forward(self, x):
+        x = self.conv_block1(x)
+        x = self.conv_block2(x)
+        x = self.conv_block3(x)
+        x = self.conv_block4(x)
+        x = self.conv_block5(x)
+        res = self.conv_block6(x)
         x, _ = self.lstm1(res)
         x, _ = self.lstm2(x)
         x = self.residual(x)
         x = x + self.liner(res)
-        #print("8", x.shape)
         x = x.flatten(start_dim=1)
-        x = self.fc1(x)
-        x = self.fc2(x)
-        x = self.fc3(x)
+        x = self.mlp_head1(x)
+        x = self.mlp_head2(x)
+        x = self.mlp_head3(x)
         return x
 
 

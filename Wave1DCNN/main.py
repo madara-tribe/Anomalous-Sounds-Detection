@@ -3,15 +3,15 @@ from pathlib import Path
 import os
 import torch
 from cfg import Cfg
-from models.model import CNN1D
-from utils.data_loder import DataLoader
+from models.model import OneDimensionalCNN
+from utils.data_loder import AudioDataset
 from train import Trainer
 from predict import Predictor
 
 def main(cfg, weight_path, mode="train"):
-    train_dataset = DataLoader(cfg, transform=True, valid=None)
-    val_dataset = DataLoader(cfg, transform=True, valid=True)
-    model = CNN1D(in_channels=cfg.CHANNEL)
+    train_dataset = AudioDataset(cfg, transform=True, is_validation=None)
+    val_dataset = AudioDataset(cfg, transform=True, is_validation=True)
+    model = OneDimensionalCNN(in_channels=cfg.CHANNEL)
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     if weight_path is not None:
         model.load_state_dict(torch.load(weight_path))
