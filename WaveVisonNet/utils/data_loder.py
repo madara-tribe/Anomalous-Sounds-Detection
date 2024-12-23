@@ -1,9 +1,7 @@
 import torch.utils.data as data
-import torch
 import numpy as np
 import glob
-import soundfile as sf
-from .signal_utils import CQTtransform, apply_bandpass, wave2image
+from .signal_utils import file_load, wave2image, wav2mel_vector
 
 
 class DataLoader(data.Dataset):
@@ -12,7 +10,6 @@ class DataLoader(data.Dataset):
         self.high_cut = config.high_cut
         self.bandpass_sr = config.bandpass_sr
         self.valid = valid
-        self.cqt_ = CQTtransform(sr=8000, fmin=2000, fmax=4000, hop_length=124)
 
         self.transform = transform 
         # Define paths based on training or validation mode
@@ -37,19 +34,20 @@ class DataLoader(data.Dataset):
         Preprocess the signal data by applying the CQT transform
         and reshaping to (1, CHANNEL, TIME_STEP).
         """
-        x = apply_bandpass(x, lf=self.low_cut, hf=self.high_cut, order=16, sr=self.bandpass_sr)
-        x = torch.from_numpy(x).float()
-        x = self.cqt_.transform(x)
-        x = wave2image(x.to('cpu').detach().numpy().copy())
+        #x = apply_bandpass(x, lf=self.low_cut, hf=self.high_cut, order=16, sr=self.bandpass_sr)
+        x = wav2mel_vector(x, sr=rate)
+        x = mel_vector = np.resize(x, (100, 64*3))
+        x = wave2image(x)
         return x
+    
     def __getitem__(self, index):
         path = self.paths[index]
-        wave, rs = sf.read(path)
+        wave, rs = file_load(path)
         x = self.preprocess(wave, rs)
-        #x.save("img/{}.png".format(index))
+#        x.save("img/{}.png".format(index))
         if self.transform is not None:
             x = self.transform(image=np.array(x))['image']
-        #print(x.shape, x.min(), x.max())
+ #       print(x.shape, x.min(), x.max())
         return x, self.labels[index]
 
 

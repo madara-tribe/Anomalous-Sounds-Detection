@@ -1,14 +1,27 @@
-import os
+import sys
 import numpy as np
 from scipy import signal
 from nnAudio.Spectrogram import CQT1992v2
 import noisereduce as nr
 import torch
+import librosa
 import matplotlib.pyplot as plt
 from PIL import Image
 from io import BytesIO
 
+def file_load(wav_name, mono=False):
+    """
+    load .wav file.
 
+    wav_name : str
+        target .wav file
+    sampling_rate : int
+        audio file sampling_rate
+    mono : boolean
+        When load a multi channels file and this param True, the returned data will be merged for mono data
+    """
+    y, sr = librosa.load(wav_name, sr=None, mono=mono)
+    return y, sr
 
 def wave2image(waveimg):
     """
@@ -48,6 +61,38 @@ class CQTtransform:
         plt.tight_layout()
         plt.show()
 
+def wav2mel_vector(y, scaler=None, 
+                         sr=16000,
+                         n_mels=64,
+                         frames=5,
+                         n_fft=1024,
+                         hop_length=512,
+                         power=1.0):
+    """
+    convert file_name to a vector array.
+
+    file_name : str
+        target .wav file
+
+    return : numpy.array( numpy.array( float ) )
+        vector array
+        * dataset.shape = (dataset_size, feature_vector_length)
+    """
+    mel_spectrogram = librosa.feature.melspectrogram(y=y,
+                                                     sr=sr,
+                                                     n_fft=n_fft,
+                                                     hop_length=hop_length,
+                                                     n_mels=n_mels,
+                                                     power=power)
+
+    # convert melspectrogram to log mel energy
+    log_mel_spectrogram = 20.0 / power * np.log10(mel_spectrogram + sys.float_info.epsilon)
+    vector_array = log_mel_spectrogram.T
+
+    # normalize from 0 to 1
+    vector_array -= vector_array.min()
+    vector_array /= vector_array.max()
+    return vector_array
 
 def remove_noise(samples, rate):
     # Noise reduction with noisereduce

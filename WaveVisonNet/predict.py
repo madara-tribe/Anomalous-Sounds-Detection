@@ -1,11 +1,9 @@
-import sys
 import os
 from tqdm import tqdm
 import time
 import numpy as np
 import matplotlib.pyplot as plt
 import torch
-import torch.nn as nn
 from torch.utils import data
 from sklearn.metrics import roc_curve, auc, f1_score, accuracy_score, confusion_matrix, ConfusionMatrixDisplay
 
@@ -17,7 +15,6 @@ class Predictor:
         self.device = device
         self.val_loader = data.DataLoader(val_dataset, batch_size=config.val_batch, shuffle=True, num_workers=0, pin_memory=None)
         self.th = 0.5
-        self.predict(config)
         print("Test set: %d" % len(val_dataset))
         y_test, y_pred = self.predict(config)
         self.evaluate(y_test, y_pred, config)
