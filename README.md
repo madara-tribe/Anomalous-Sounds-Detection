@@ -5,7 +5,7 @@ It includes 1DCNN and 2DCNN for wave data.
 
 the method to convert wave feature to image through matplotlib is charastalistic.
 
-## Used task and dataset 
+### Used task and dataset 
 
 - [DACASE 2024](https://dcase.community/challenge2024/index)
 
@@ -13,7 +13,7 @@ the method to convert wave feature to image through matplotlib is charastalistic
 
 Basic performance of each models by Pink noise detection task
 
-## 1DCNN
+### 1DCNN
 
 <img src="https://github.com/user-attachments/assets/97cb9017-642b-4198-9878-02f14c6590c5" width="400px" height="300px"/><img src="https://github.com/user-attachments/assets/234839c4-b046-4f57-bd6c-afe61a5435c1" width="400px" height="300px"/>
 
@@ -23,7 +23,7 @@ Basic performance of each models by Pink noise detection task
 
 
 
-## WaveVisonNet
+### WaveVisonNet
 
 <img src="https://github.com/user-attachments/assets/b0feb2f0-a86d-49ec-82e8-5773b5530a02" width="400px" height="300px"/><img src="https://github.com/user-attachments/assets/88cafd28-e31d-49da-b41e-8e1f09824de1" width="400px" height="300px"/>
 
