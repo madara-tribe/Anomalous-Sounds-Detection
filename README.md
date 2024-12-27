@@ -1,6 +1,13 @@
 # Anomalous-Sounds-Detection
 
+This repository is useful Network to detect sound detection or similar task.
+It includes 1DCNN and 2DCNN for wave data. 
 
+the method to convert wave feature to image through matplotlib is charastalistic.
+
+## Used task and dataset 
+
+- [DACASE 2024](https://dcase.community/challenge2024/index)
 
 # Performance (Pink noise detection)
 
@@ -49,3 +56,7 @@ def convert_waveform_to_image(waveform):
     return image
 ```
 
+# References
+- [DCASE-Task1A-Code](https://github.com/WangHelin1997/DCASE-2020-Task1A-Code/tree/update)
+- [機械音の異常検知チャレンジ DCASE 2020 Task 2](https://qiita.com/daisukelab/items/b106c567cf8927a5519a)
+- [Kaggle G2Net Gravitational Wave Detection コンペ振り返り](https://qiita.com/anonamename/items/5b7fa5d9d5d7f9970e06)
