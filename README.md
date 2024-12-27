@@ -4,6 +4,7 @@
 
 # Performance (Pink noise detection)
 
+Basic performance of each models by Pink noise detection task
 
 ## 1DCNN
 
@@ -22,6 +23,11 @@
 
 
 # convert wave to image through matplotlib
+
+<b>this is the way to convert wave feature to image through matplotlib</b>
+
+![plt_process](https://github.com/user-attachments/assets/3f990b7c-3d18-4ebb-8541-2e0095e81a4f)
+
 
 ```python
 import matplotlib.pyplot as plt
