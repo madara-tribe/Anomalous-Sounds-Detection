@@ -30,7 +30,7 @@ Basic performance of each models by Pink noise detection task
 
 ### VAE for 1D
 
-<img src="https://github.com/user-attachments/assets/b0feb2f0-a86d-49ec-82e8-5773b5530a02" width="400px" height="300px"/><img src="https://github.com/user-attachments/assets/88cafd28-e31d-49da-b41e-8e1f09824de1" width="400px" height="300px"/>
+<img src="https://github.com/user-attachments/assets/8b87296e-7466-474b-a1ff-6439ce1ad035" width="400px" height="300px"/><img src="https://github.com/user-attachments/assets/8cac7cab-79c0-4124-861b-91dc6c6e4287" width="400px" height="300px"/>
 
 
 # convert wave to image through matplotlib
